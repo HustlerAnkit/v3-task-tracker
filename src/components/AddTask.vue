@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default{
     name: 'AddTask',
     data(){
@@ -32,6 +33,7 @@ export default{
         }
     },
     methods:{
+        ...mapActions(['storeTask']),
         handleSubmit(){
             if(!this.text){
                 alert('please add task.');
@@ -48,8 +50,8 @@ export default{
                 day: this.day,
                 reminder: this.reminder
             };
-
-            this.$emit('add-task', newTask)
+            
+            this.storeTask(newTask);
 
             this.text = '';
             this.day = '';

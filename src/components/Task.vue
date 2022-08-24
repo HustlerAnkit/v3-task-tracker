@@ -1,5 +1,5 @@
 <template>
-    <div @dblclick="$emit('toggle-reminder', task.id)" :class="[ task.reminder ? 'reminder' : '', 'task']">
+    <div @dblclick="toggleTask(task.id)" :class="[ task.reminder ? 'reminder' : '', 'task']">
         <h3>
             {{ task.text }}
             <i class="fas fa-times" @click="deleteTask(task.id)"></i>
@@ -9,15 +9,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default{
     name: 'Task',
     props: {
         task: Object
     },
-    methods:{
-        deleteTask(id){
-            this.$emit('delete-task', id);
-        }
+    methods: { 
+      ...mapActions(['deleteTask', 'fetchTask', 'updateTask']),
+
+      async toggleTask(id){
+        const taskToUpdate = await this.fetchTask(id);
+        const updatedTask = { ...taskToUpdate, reminder: !taskToUpdate.reminder };
+        // console.log(updatedTask);return;
+        this.updateTask({ id, updatedTask });
+      }
+
     }
 }
 </script>
